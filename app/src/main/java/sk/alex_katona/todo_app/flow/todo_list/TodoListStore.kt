@@ -6,7 +6,7 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.SuspendExecutor
 
 internal interface TodoListStore :
-    Store<TodoListStore.TodoListIntents, TodoListStore.TodoListState, Nothing> {
+        Store<TodoListStore.TodoListIntents, TodoListStore.TodoListState, Nothing> {
 
     sealed class TodoListIntents {
         object Increase : TodoListIntents()
@@ -15,7 +15,7 @@ internal interface TodoListStore :
     }
 
     data class TodoListState(
-        val number: Int = 0
+            val number: Int = 0
     )
 
 }
@@ -26,8 +26,7 @@ internal class TodoListStoreImpl(private val storeFactory: StoreFactory) {
         class Value(val value: Int) : TodoListResult()
     }
 
-    private object TodoListReducerImpl :
-        Reducer<TodoListStore.TodoListState, TodoListResult> {
+    private object TodoListReducerImpl : Reducer<TodoListStore.TodoListState, TodoListResult> {
         override fun TodoListStore.TodoListState.reduce(result: TodoListResult): TodoListStore.TodoListState {
             return when (result) {
                 is TodoListResult.Value -> this
@@ -35,12 +34,8 @@ internal class TodoListStoreImpl(private val storeFactory: StoreFactory) {
         }
     }
 
-    private class TodoListExecutorImpl :
-        SuspendExecutor<TodoListStore.TodoListIntents, Nothing, TodoListStore.TodoListState, TodoListResult, Nothing>() {
-        override suspend fun executeIntent(
-            intent: TodoListStore.TodoListIntents,
-            getState: () -> TodoListStore.TodoListState
-        ) {
+    private class TodoListExecutorImpl : SuspendExecutor<TodoListStore.TodoListIntents, Nothing, TodoListStore.TodoListState, TodoListResult, Nothing>() {
+        override suspend fun executeIntent(intent: TodoListStore.TodoListIntents, getState: () -> TodoListStore.TodoListState) {
             super.executeIntent(intent, getState)
         }
     }
