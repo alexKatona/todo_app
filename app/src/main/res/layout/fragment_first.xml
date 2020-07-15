@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".flow.todo_list.TodoList">
+    tools:context=".flow.todo_list.TodoListFragment">
 
     <TextView
         android:id="@+id/textview_first"
@@ -30,10 +30,29 @@
         android:id="@+id/button_interaction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="interact"
+        android:text="load_items"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_navigation" />
+
+    <Button
+        android:id="@+id/button_add_random_todo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="add_random_todo_item"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_interaction" />
+
+    <ProgressBar
+        android:id="@+id/loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

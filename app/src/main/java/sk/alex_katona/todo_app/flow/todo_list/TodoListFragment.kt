@@ -11,7 +11,7 @@ import sk.alex_katona.todo_app.base.BaseFragment
 import sk.alex_katona.todo_app.helpers.clicksThrottled
 import sk.alex_katona.todo_app.navigators.AppScreens
 
-class TodoList : BaseFragment() {
+class TodoListFragment : BaseFragment() {
 
     private val todoListViewModel: TodoListViewModel by viewModels()
 
@@ -21,7 +21,11 @@ class TodoList : BaseFragment() {
         todoListViewModel.getViewStateLiveData().observe(this, render())
 
         button_interaction.clicksThrottled(lifecycleScope) {
-            todoListViewModel.postAction(TodoListActions.Init)
+            todoListViewModel.emitAction(TodoListActions.Init)
+        }
+
+        button_add_random_todo.clicksThrottled(lifecycleScope) {
+            todoListViewModel.emitAction(TodoListActions.GenerateNewTodoItem)
         }
 
         button_navigation.clicksThrottled(lifecycleScope) {
@@ -31,7 +35,11 @@ class TodoList : BaseFragment() {
 
     private fun render(): Observer<TodoListViewState> {
         return Observer {
-            textview_first.text = it.items.joinToString(separator = ";")
+            println("Rendering: $it")
+            loading.visibility = if (it.isLoading) View.VISIBLE else View.GONE
+            textview_first.text =
+                it.items.ifEmpty { listOf(TodoItem("Seems there are no todo items, lets generate them")) }
+                    .joinToString(separator = "\n")
         }
     }
 }

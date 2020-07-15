@@ -4,10 +4,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 abstract class BaseViewModel<ViewState, Action, PartialState> : ViewModel() {
+
     private val viewState = MutableLiveData<ViewState>()
 
     init {
-        viewState.postValue(this.getInitialState())
+        viewState.setValue(this.getInitialState())
     }
 
     abstract fun getInitialState(): ViewState
@@ -17,10 +18,15 @@ abstract class BaseViewModel<ViewState, Action, PartialState> : ViewModel() {
     }
 
     protected fun emitPartialState(partialState: PartialState) {
-        viewState.postValue(reduce(viewState.value ?: getInitialState(), partialState))
+        println("===Reducing=============================================")
+        println("| previousState: ${viewState.value}")
+        println("| partialState: $partialState")
+        println("========================================================")
+        val newState = reduce(viewState.value ?: getInitialState(), partialState)
+        viewState.setValue(newState)
     }
 
-    abstract fun postAction(action: Action)
+    abstract fun emitAction(action: Action)
 
     abstract fun reduce(previousState: ViewState, partialState: PartialState): ViewState
 }
