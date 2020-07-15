@@ -10,7 +10,7 @@ data class TodoItem(val title: String)
 
 interface TodoListInteractor {
     suspend fun getTodoItems(): Flow<List<TodoItem>>
-    suspend fun storeTodoItem(todoItem: TodoItem): Flow<Unit>
+    suspend fun storeTodoItem(todoItem: TodoItem)
 }
 
 class TodoListInteractorImpl @Inject constructor() :
@@ -25,11 +25,9 @@ class TodoListInteractorImpl @Inject constructor() :
         }.onEach { delay(1000) }
     }
 
-    override suspend fun storeTodoItem(todoItem: TodoItem): Flow<Unit> {
-        return flow {
-            todoItems.add(todoItem)
-            emit(Unit)
-        }.onEach { delay(1000) }
+    override suspend fun storeTodoItem(todoItem: TodoItem) {
+        delay(1000)
+        todoItems.add(todoItem)
     }
 
 }

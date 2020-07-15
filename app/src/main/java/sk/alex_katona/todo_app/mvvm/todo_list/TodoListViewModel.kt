@@ -2,7 +2,7 @@ package sk.alex_katona.todo_app.mvvm.todo_list
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import sk.alex_katona.todo_app.mvvm.BaseViewModel
 import java.util.*
@@ -29,41 +29,26 @@ class TodoListViewModel @ViewModelInject constructor(
     override fun emitAction(action: TodoListActions) {
         when (action) {
             TodoListActions.Init -> loadStoredTodos()
-            TodoListActions.GenerateNewTodoItem -> storeTodoItem()
+            TodoListActions.GenerateNewTodoItem -> generateNewTodoItem()
         }
     }
 
-    private fun storeTodoItem() {
+    private fun generateNewTodoItem() {
         viewModelScope.launch {
-            todoListInteractor.storeTodoItem(
-                TodoItem(
-                    UUID.randomUUID().toString().take(5)
-                )
-            )
-                .flatMapConcat {
-                    todoListInteractor.getTodoItems()
-                        .onEach {
-                            emitPartialState(
-                                TodoListPartialState.TodoItems(
-                                    it
-                                )
-                            )
-                        }
-                }.onStart { emitPartialState(TodoListPartialState.Loading) }
-                .launchIn(this)
+            emitPartialState(TodoListPartialState.Loading)
+            todoListInteractor.storeTodoItem(TodoItem(UUID.randomUUID().toString().take(5)))
+            loadStoredTodos(false)
         }
     }
 
-    private fun loadStoredTodos() {
+    private fun loadStoredTodos(withLoading: Boolean = true) {
         viewModelScope.launch {
+            if (withLoading) {
+                emitPartialState(TodoListPartialState.Loading)
+            }
             todoListInteractor.getTodoItems()
-                .onStart { emitPartialState(TodoListPartialState.Loading) }
                 .collect {
-                    emitPartialState(
-                        TodoListPartialState.TodoItems(
-                            it
-                        )
-                    )
+                    emitPartialState(TodoListPartialState.TodoItems(it))
                 }
         }
     }
