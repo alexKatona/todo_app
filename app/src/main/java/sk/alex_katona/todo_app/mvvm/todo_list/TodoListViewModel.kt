@@ -1,10 +1,10 @@
-package sk.alex_katona.todo_app.flow.todo_list
+package sk.alex_katona.todo_app.mvvm.todo_list
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import sk.alex_katona.todo_app.base.BaseViewModel
+import sk.alex_katona.todo_app.mvvm.BaseViewModel
 import java.util.*
 
 data class TodoListViewState(
@@ -35,10 +35,20 @@ class TodoListViewModel @ViewModelInject constructor(
 
     private fun storeTodoItem() {
         viewModelScope.launch {
-            todoListInteractor.storeTodoItem(TodoItem(UUID.randomUUID().toString().take(5)))
+            todoListInteractor.storeTodoItem(
+                TodoItem(
+                    UUID.randomUUID().toString().take(5)
+                )
+            )
                 .flatMapConcat {
                     todoListInteractor.getTodoItems()
-                        .onEach { emitPartialState(TodoListPartialState.TodoItems(it)) }
+                        .onEach {
+                            emitPartialState(
+                                TodoListPartialState.TodoItems(
+                                    it
+                                )
+                            )
+                        }
                 }.onStart { emitPartialState(TodoListPartialState.Loading) }
                 .launchIn(this)
         }
@@ -48,11 +58,18 @@ class TodoListViewModel @ViewModelInject constructor(
         viewModelScope.launch {
             todoListInteractor.getTodoItems()
                 .onStart { emitPartialState(TodoListPartialState.Loading) }
-                .collect { emitPartialState(TodoListPartialState.TodoItems(it)) }
+                .collect {
+                    emitPartialState(
+                        TodoListPartialState.TodoItems(
+                            it
+                        )
+                    )
+                }
         }
     }
 
-    override fun getInitialState(): TodoListViewState = TodoListViewState()
+    override fun getInitialState(): TodoListViewState =
+        TodoListViewState()
 
     override fun reduce(
         previousState: TodoListViewState,

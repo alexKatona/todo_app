@@ -1,4 +1,4 @@
-package sk.alex_katona.todo_app.base
+package sk.alex_katona.todo_app.mvvm
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

@@ -1,4 +1,4 @@
-package sk.alex_katona.todo_app.flow.todo_list
+package sk.alex_katona.todo_app.mvvm.todo_list
 
 import android.os.Bundle
 import android.view.View
@@ -38,7 +38,13 @@ class TodoListFragment : BaseFragment() {
             println("Rendering: $it")
             loading.visibility = if (it.isLoading) View.VISIBLE else View.GONE
             textview_first.text =
-                it.items.ifEmpty { listOf(TodoItem("Seems there are no todo items, lets generate them")) }
+                it.items.ifEmpty {
+                    listOf(
+                        TodoItem(
+                            "Seems there are no todo items, lets generate them"
+                        )
+                    )
+                }
                     .joinToString(separator = "\n")
         }
     }

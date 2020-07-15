@@ -4,10 +4,10 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
-import sk.alex_katona.todo_app.flow.todo_list.TodoListInteractor
-import sk.alex_katona.todo_app.flow.todo_list.TodoListInteractorImpl
 import sk.alex_katona.todo_app.managers.AppActivityManager
 import sk.alex_katona.todo_app.managers.AppActivityManagerImpl
+import sk.alex_katona.todo_app.mvvm.todo_list.TodoListInteractor
+import sk.alex_katona.todo_app.mvvm.todo_list.TodoListInteractorImpl
 import sk.alex_katona.todo_app.navigators.AppNavigator
 import sk.alex_katona.todo_app.navigators.AppNavigatorImpl
 import javax.inject.Singleton

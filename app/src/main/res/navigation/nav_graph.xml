@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/FirstFragment"
-        android:name="sk.alex_katona.todo_app.flow.todo_list.TodoListFragment"
+        android:name="sk.alex_katona.todo_app.mvvm.todo_list.TodoListFragment"
         android:label="@string/first_fragment_label"
         tools:layout="@layout/fragment_first">
 
@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/SecondFragment"
-        android:name="sk.alex_katona.todo_app.TodoDetail"
+        android:name="sk.alex_katona.todo_app.mviCake.TodoDetail"
         android:label="@string/second_fragment_label"
         tools:layout="@layout/fragment_second">
 

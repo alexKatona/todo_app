@@ -1,4 +1,4 @@
-package sk.alex_katona.todo_app.flow.todo_list
+package sk.alex_katona.todo_app.mvvm.todo_list
 
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -13,7 +13,8 @@ interface TodoListInteractor {
     suspend fun storeTodoItem(todoItem: TodoItem): Flow<Unit>
 }
 
-class TodoListInteractorImpl @Inject constructor() : TodoListInteractor {
+class TodoListInteractorImpl @Inject constructor() :
+    TodoListInteractor {
 
     // this can be a database, api call etc
     private val todoItems: MutableList<TodoItem> = mutableListOf()
