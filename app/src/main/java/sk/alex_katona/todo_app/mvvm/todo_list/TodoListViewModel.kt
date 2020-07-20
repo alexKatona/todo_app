@@ -2,7 +2,9 @@ package sk.alex_katona.todo_app.mvvm.todo_list
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import sk.alex_katona.todo_app.mvvm.BaseViewModel
 import java.util.*
@@ -27,6 +29,7 @@ class TodoListViewModel @ViewModelInject constructor(
 ) : BaseViewModel<TodoListViewState, TodoListActions, TodoListPartialState>() {
 
     override fun emitAction(action: TodoListActions) {
+        super.emitAction(action)
         when (action) {
             TodoListActions.Init -> loadStoredTodos()
             TodoListActions.GenerateNewTodoItem -> generateNewTodoItem()
@@ -37,7 +40,7 @@ class TodoListViewModel @ViewModelInject constructor(
         viewModelScope.launch {
             emitPartialState(TodoListPartialState.Loading)
             todoListInteractor.storeTodoItem(TodoItem(UUID.randomUUID().toString().take(5)))
-            loadStoredTodos(false)
+            loadStoredTodos(true)
         }
     }
 
@@ -47,7 +50,9 @@ class TodoListViewModel @ViewModelInject constructor(
                 emitPartialState(TodoListPartialState.Loading)
             }
             todoListInteractor.getTodoItems()
+                .onEach { delay(1200) }
                 .collect {
+                    println("collect")
                     emitPartialState(TodoListPartialState.TodoItems(it))
                 }
         }
@@ -60,6 +65,10 @@ class TodoListViewModel @ViewModelInject constructor(
         previousState: TodoListViewState,
         partialState: TodoListPartialState
     ): TodoListViewState {
+        println("===ReducingInViewModel=============================================")
+        println("| previousState: ${previousState}")
+        println("| partialState: $partialState")
+        println("========================================================")
         return when (partialState) {
             is TodoListPartialState.TodoItems -> previousState.copy(
                 items = partialState.items,

@@ -44,8 +44,7 @@ class TodoListFragment : BaseFragment() {
                             "Seems there are no todo items, lets generate them"
                         )
                     )
-                }
-                    .joinToString(separator = "\n")
+                }.joinToString(separator = "\n")
         }
     }
 }
