@@ -2,6 +2,7 @@ package sk.alex_katona.todo_app.mviCake
 
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import co.zsmb.rainbowcake.base.RainbowCakeFragment
 import co.zsmb.rainbowcake.extensions.exhaustive
 import dagger.hilt.android.AndroidEntryPoint
@@ -14,6 +15,8 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class TodoDetailFragment : RainbowCakeFragment<TodoDetailViewState, TodoDetailViewModel>() {
+
+    val args: TodoDetailFragmentArgs by navArgs()
 
     @Inject
     lateinit var appNavigator: AppNavigator
@@ -29,7 +32,7 @@ class TodoDetailFragment : RainbowCakeFragment<TodoDetailViewState, TodoDetailVi
         button_second.clicksThrottled(lifecycleScope) {
             appNavigator.navigateFrom(AppScreens.Detail)
         }
-        viewModel.loadDetails()
+        viewModel.loadDetails(args.todoId)
     }
 
     override fun render(viewState: TodoDetailViewState) {
@@ -40,7 +43,10 @@ class TodoDetailFragment : RainbowCakeFragment<TodoDetailViewState, TodoDetailVi
             TodoDetailViewState.Init -> {
             }
             is TodoDetailViewState.Data -> {
-                textview_second.text = viewState.details.name
+                textview_second.text = viewState.details.title
+            }
+            TodoDetailViewState.Error -> {
+                textview_second.text = "Todo item not found"
             }
         }.exhaustive
     }

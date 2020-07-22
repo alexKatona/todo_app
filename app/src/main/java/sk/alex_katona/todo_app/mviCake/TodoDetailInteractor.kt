@@ -1,15 +1,17 @@
 package sk.alex_katona.todo_app.mviCake
 
-import kotlinx.coroutines.delay
+import sk.alex_katona.todo_app.database.TodoDatabase
+import sk.alex_katona.todo_app.database.convert
+import sk.alex_katona.todo_app.mvvm.todo_list.TodoItem
 import javax.inject.Inject
 
-class TodoDetailInteractor @Inject constructor() {
-    suspend fun getDetails(): TodoDetails {
-        delay(3000)
-        return TodoDetails("this can be loaded from db, cache, remote")
+class TodoDetailInteractor @Inject constructor(
+    private val todoDatabase: TodoDatabase
+) {
+    suspend fun getDetails(todoId: Int): TodoItem? {
+        return todoDatabase.todoDao()
+            .getAll()
+            .firstOrNull { it.id == todoId } // TODO FIX selection
+            ?.convert()
     }
 }
-
-data class TodoDetails(
-    val name: String
-)

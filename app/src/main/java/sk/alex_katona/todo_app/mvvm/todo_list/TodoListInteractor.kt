@@ -1,36 +1,33 @@
 package sk.alex_katona.todo_app.mvvm.todo_list
 
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.flow
+import sk.alex_katona.todo_app.database.TodoDatabase
+import sk.alex_katona.todo_app.database.convert
 import javax.inject.Inject
 
-data class TodoItem(val title: String)
+data class TodoItem(val id: Int = 0, val title: String)
 
 interface TodoListInteractor {
     suspend fun getTodoItems(): Flow<List<TodoItem>>
     suspend fun storeTodoItem(todoItem: TodoItem)
 }
 
-class TodoListInteractorImpl @Inject constructor() :
-    TodoListInteractor {
-
-    // this can be a database, api call etc
-    private val todoItems: MutableList<TodoItem> = mutableListOf()
+class TodoListInteractorImpl @Inject constructor(
+    private val todoDatabase: TodoDatabase
+) : TodoListInteractor {
 
     override suspend fun getTodoItems(): Flow<List<TodoItem>> {
-        return channelFlow {
-            this.send(todoItems)
-        }.onEach {
-            println("getTodoItems")
-        }.onEach { delay(1000) }
+        return flow {
+           todoDatabase.todoDao()
+               .getAll()
+               .map { it.convert() }
+               .also { emit(it) }
+        }
     }
 
     override suspend fun storeTodoItem(todoItem: TodoItem) {
-        println("storeTodoItem")
-        delay(1000)
-        todoItems.add(todoItem)
+        todoDatabase.todoDao().addAll(todoItem.convert())
     }
 
 }

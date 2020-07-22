@@ -2,9 +2,7 @@ package sk.alex_katona.todo_app.mvvm.todo_list
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import sk.alex_katona.todo_app.mvvm.BaseViewModel
 import java.util.*
@@ -39,7 +37,7 @@ class TodoListViewModel @ViewModelInject constructor(
     private fun generateNewTodoItem() {
         viewModelScope.launch {
             emitPartialState(TodoListPartialState.Loading)
-            todoListInteractor.storeTodoItem(TodoItem(UUID.randomUUID().toString().take(5)))
+            todoListInteractor.storeTodoItem(TodoItem(title = UUID.randomUUID().toString().take(5)))
             loadStoredTodos(true)
         }
     }
@@ -50,9 +48,7 @@ class TodoListViewModel @ViewModelInject constructor(
                 emitPartialState(TodoListPartialState.Loading)
             }
             todoListInteractor.getTodoItems()
-                .onEach { delay(1200) }
                 .collect {
-                    println("collect")
                     emitPartialState(TodoListPartialState.TodoItems(it))
                 }
         }

@@ -17,6 +17,7 @@ class TodoListFragment : BaseFragment() {
 
     override fun getLayoutResId(): Int = R.layout.fragment_first
 
+    @ExperimentalStdlibApi
     override fun init(view: View, savedInstanceState: Bundle?) {
         todoListViewModel.getViewStateLiveData().observe(this, render())
 
@@ -27,12 +28,9 @@ class TodoListFragment : BaseFragment() {
         button_add_random_todo.clicksThrottled(lifecycleScope) {
             todoListViewModel.emitAction(TodoListActions.GenerateNewTodoItem)
         }
-
-        button_navigation.clicksThrottled(lifecycleScope) {
-            appNavigator.navigateFrom(AppScreens.List)
-        }
     }
 
+    @ExperimentalStdlibApi
     private fun render(): Observer<TodoListViewState> {
         return Observer {
             println("Rendering: $it")
@@ -41,10 +39,15 @@ class TodoListFragment : BaseFragment() {
                 it.items.ifEmpty {
                     listOf(
                         TodoItem(
+                            0,
                             "Seems there are no todo items, lets generate them"
                         )
                     )
                 }.joinToString(separator = "\n")
+
+            button_navigation.clicksThrottled(lifecycleScope) {
+                it.items.randomOrNull()?.let { appNavigator.navigateFrom(AppScreens.List(it.id)) }
+            }
         }
     }
 }
