@@ -10,8 +10,7 @@ class TodoDetailInteractor @Inject constructor(
 ) {
     suspend fun getDetails(todoId: Int): TodoItem? {
         return todoDatabase.todoDao()
-            .getAll()
-            .firstOrNull { it.id == todoId } // TODO FIX selection
+            .getById(todoId)
             ?.convert()
     }
 }

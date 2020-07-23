@@ -18,6 +18,9 @@ interface TodoDAO {
     @Query("SELECT * FROM todo_entity")
     suspend fun getAll(): List<TodoEntity>
 
+    @Query("SELECT * FROM todo_entity WHERE id =:id ")
+    suspend fun getById(id: Int): TodoEntity?
+
     @Insert(entity = TodoEntity::class, onConflict = OnConflictStrategy.ABORT)
     suspend fun addAll(vararg todoEntity: TodoEntity)
 
